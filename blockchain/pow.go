@@ -1,17 +1,18 @@
-package main
+package blockchain
 
 import (
 	"bytes"
 	"crypto/sha256"
 	"fmt"
+	"github.com/adrien3d/monarch/utils"
 	"math"
 	"math/big"
 	"time"
 )
 
 type ProofOfWork struct {
-	block  *Block
-	target *big.Int
+	block  *Block   `json:"block"`
+	target *big.Int `json:"target"`
 }
 
 var maxNonce = math.MaxInt64
@@ -30,9 +31,9 @@ func (pow *ProofOfWork) prepareData(nonce int) []byte {
 		[][]byte{
 			[]byte(pow.block.PrevBlockHash),
 			[]byte(pow.block.Data),
-			IntToHex(pow.block.Timestamp),
-			IntToHex(int64(targetBits)),
-			IntToHex(int64(nonce)),
+			utils.IntToHex(pow.block.Timestamp),
+			utils.IntToHex(int64(targetBits)),
+			utils.IntToHex(int64(nonce)),
 		},
 		[]byte{},
 	)
@@ -49,7 +50,7 @@ func (pow *ProofOfWork) Run() (int, []byte) {
 	for nonce < maxNonce {
 		data := pow.prepareData(nonce)
 		hash = sha256.Sum256(data)
-		fmt.Printf("\r%x", hash)
+		fmt.Printf("\r%x\t", hash)
 		hashInt.SetBytes(hash[:])
 
 		if hashInt.Cmp(pow.target) == -1 {

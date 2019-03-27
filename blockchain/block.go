@@ -1,8 +1,12 @@
-package main
+package blockchain
 
 import (
 	"time"
 )
+
+type Blockchain struct {
+	Blocks []*Block
+}
 
 type Block struct {
 	Timestamp     int64
@@ -34,9 +38,9 @@ func NewBlock(data string, prevBlockHash string) *Block {
 	return block
 }
 func (bc *Blockchain) AddBlock(data string) {
-	prevBlock := bc.blocks[len(bc.blocks)-1]
+	prevBlock := bc.Blocks[len(bc.Blocks)-1]
 	newBlock := NewBlock(data, prevBlock.Hash)
-	bc.blocks = append(bc.blocks, newBlock)
+	bc.Blocks = append(bc.Blocks, newBlock)
 }
 
 func NewGenesisBlock() *Block {
